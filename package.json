@@ -1,0 +1,23 @@
+{
+  "name": "typescript-dev-env",
+  "version": "1.0.0",
+  "description": "- init setup for typescript + debugger and jest. - No react or any other frontend set up.",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h15200/Typescript-Dev-Env.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/h15200/Typescript-Dev-Env/issues"
+  },
+  "homepage": "https://github.com/h15200/Typescript-Dev-Env#readme"
+}

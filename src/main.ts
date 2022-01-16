@@ -1,4 +1,4 @@
-export class Printer {
+class Printer {
   private text: string;
   constructor(str: string) {
     this.text = str;

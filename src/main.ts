@@ -228,4 +228,568 @@ function findTwoMissingInt(nums: number[]): number[] {
   return Object.keys(hash).map((stringNum) => parseInt(stringNum, 10));
 }
 
-console.log(findTwoMissingInt([1, 3, 5, 6, 7, 8, 9, 10]));
+// console.log(findTwoMissingInt([1, 3, 5, 6, 7, 8, 9, 10]));
+
+// given an arr, return an arr of top k largest nums
+function topKth(nums: number[], k: number): number[] {
+  const sorted = nums.sort((a, b) => b - a); // descending order
+  const output: number[] = [];
+  for (let i = 0; i < sorted.length; i++) {
+    if (output.length < k) {
+      if (!output.includes(sorted[i])) {
+        output.push(sorted[i]);
+      }
+    }
+  }
+  return output;
+}
+
+// console.log(topKth([1, 5, 1, 5, 1], 5));
+
+/**
+ Do not return anything, modify nums in-place instead.
+ */
+/**
+ Do not return anything, modify nums in-place instead.
+ */
+/**
+ Do not return anything, modify nums in-place instead.
+ */
+function nextPermutation(nums: number[]): void {
+  if (nums.length === 1) return;
+  // [1,4,7,2,6,7, 3, 2, 1] -> [1, 4, 7, 2, 7, 1, 2, 3, 6]
+  //          i-1 i
+
+  // travel backwards until a number i is smaller than i - 1
+  // if this doesn't exist, just return ascending order
+  // if found, first flip those two nums
+  // take remaining after the flipped index and order in ascending
+
+  // first just find if there is a digit from the end where i is bigger than i - 1
+  let flipIdx = -1;
+  for (let i = nums.length - 1; i >= 1; i--) {
+    if (nums[i] > nums[i - 1]) {
+      flipIdx = i;
+      break;
+    }
+  }
+  if (flipIdx === -1) {
+    nums.sort((a, b) => a - b);
+    return;
+  }
+
+  // flip idx - 1 is the "LEFT". Now check all nums from idx to end where it's bigger than idx-1 val, but the smallest
+
+  let rightFlip = flipIdx;
+  let minValue = nums[flipIdx];
+  for (let i = flipIdx; i < nums.length; i++) {
+    if (nums[i] > nums[flipIdx - 1] && nums[i] < minValue) {
+      minValue = nums[i];
+      rightFlip = i;
+    }
+  }
+
+  // now flip
+  [nums[flipIdx - 1], nums[rightFlip]] = [nums[rightFlip], nums[flipIdx - 1]];
+
+  // partially sort the rest in ascending order
+  const choicesLeft = [...nums.slice(flipIdx, nums.length)];
+  for (let i = flipIdx; i < nums.length; i++) {
+    const min = Math.min(...choicesLeft);
+    const idx = choicesLeft.indexOf(min);
+    nums[i] = min;
+    choicesLeft.splice(idx, 1);
+  }
+}
+
+// console.log(nextPermutation([1, 3, 2]));
+
+function numIslands(grid: string[][]): number {
+  // if we're allowed to mutate matrix, isVisited = "2"
+  // loop through matrix
+  // if "1", first turn to "1", then search all 4 neighbors
+  // if a neighbor is "1", add to queue. ignore others
+
+  let totalIslands = 0;
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid[0].length; x++) {
+      if (grid[y][x] === "1") {
+        checkIsland(y, x);
+      }
+    }
+  }
+  return totalIslands;
+
+  function checkIsland(y: number, x: number): void {
+    totalIslands++;
+    // now search all neighbors
+    const queue: number[][] = [[y, x]];
+    grid[y][x] = "2";
+    while (queue.length) {
+      const coords = queue.shift()!;
+      const [yCoord, xCoord] = coords;
+      // get all neighbors and inspect
+      const neighborCoord = [
+        [yCoord - 1, xCoord],
+        [yCoord + 1, xCoord],
+        [yCoord, xCoord - 1],
+        [yCoord, xCoord + 1],
+      ];
+      for (const coord of neighborCoord) {
+        const [neighborY, neighborX] = coord;
+        if (
+          grid[neighborY] !== undefined &&
+          grid[neighborY][neighborX] === "1"
+        ) {
+          grid[neighborY][neighborX] = "2";
+          queue.push([neighborY, neighborX]);
+        }
+      }
+    }
+  }
+}
+
+console.log(
+  numIslands([
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "0",
+      "1",
+      "1",
+    ],
+    [
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+    ],
+    [
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "0",
+      "0",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "0",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "1",
+      "1",
+      "1",
+      "1",
+      "0",
+      "0",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+    [
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+      "1",
+    ],
+  ]),
+);

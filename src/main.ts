@@ -205,4 +205,126 @@ function countSubstrings(s: string): number {
   }
 }
 
-console.log(countSubstrings("fdsklf"));
+// console.log(countSubstrings("fdsklf"));
+
+// Definition for singly-linked list.
+class ListNode {
+  val: number;
+  next: ListNode | null;
+  constructor(val?: number, next?: ListNode | null) {
+    this.val = val === undefined ? 0 : val;
+    this.next = next === undefined ? null : next;
+  }
+}
+
+class MinHeap {
+  heap: number[];
+  constructor() {
+    this.heap = [];
+  }
+
+  add(num: number): void {
+    console.log("adding", num);
+    this.heap.push(num);
+    this.siftUp();
+  }
+
+  remove(): number {
+    // swap
+    [this.heap[0], this.heap[this.heap.length - 1]] = [
+      this.heap[this.heap.length - 1],
+      this.heap[0],
+    ];
+    const removed = this.heap.pop()!;
+    this.siftDown();
+    return removed;
+  }
+
+  private siftUp(): void {
+    let idx = this.heap.length - 1;
+    // children are 2[i] + 1 and 2[i] + 2
+    // parent is ceil idx / 2 - 1
+    while (idx >= 0) {
+      const parentIdx = Math.ceil(idx / 2) - 1;
+      if (parentIdx < 0) return;
+      if (this.heap[idx] < this.heap[parentIdx]) {
+        // swap
+        [this.heap[idx], this.heap[parentIdx]] = [
+          this.heap[parentIdx],
+          this.heap[idx],
+        ];
+        idx = parentIdx;
+      } else {
+        return;
+      }
+    }
+  }
+
+  private siftDown(): void {
+    let idx = 0;
+    while (idx < this.heap.length) {
+      const leftIdx = idx * 2 + 1;
+      const rightIdx = idx * 2 + 2;
+      if (leftIdx > this.heap.length && rightIdx > this.heap.length) {
+        return;
+      }
+      const smallerChildIdx = this.getSmaller(leftIdx, rightIdx);
+      if (this.heap[smallerChildIdx] < this.heap[idx]) {
+        [this.heap[smallerChildIdx], this.heap[idx]] = [
+          this.heap[idx],
+          this.heap[smallerChildIdx],
+        ];
+        idx = smallerChildIdx;
+      } else {
+        return;
+      }
+    }
+  }
+
+  private getSmaller(num1: number, num2: number): number {
+    if (this.heap[num1] === undefined) return num2;
+    if (this.heap[num2] === undefined) return num1;
+    if (this.heap[num1] < this.heap[num2]) return num1;
+    return num2;
+  }
+}
+
+function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
+  // use minHeap
+
+  const minHeap = new MinHeap();
+  addAllValsToHeap(minHeap);
+  console.log(minHeap);
+
+  const output = new ListNode(0);
+  let curr = output;
+
+  if (minHeap.heap.length === 0) {
+    return null;
+  }
+
+  while (minHeap.heap.length) {
+    curr.val = minHeap.remove();
+    if (minHeap.heap.length) {
+      const newList = new ListNode(0);
+      curr.next = newList;
+      curr = curr.next;
+    } else {
+      curr.next = null;
+      return output;
+    }
+  }
+
+  return null;
+
+  function addAllValsToHeap(minHeap: MinHeap): void {
+    for (let nodeOrNull of lists) {
+      while (nodeOrNull !== null) {
+        minHeap.add(nodeOrNull.val);
+        nodeOrNull = nodeOrNull.next;
+      }
+    }
+  }
+}
+
+// console.log(mergeKLists([new ListNode(1), new ListNode(0)]));

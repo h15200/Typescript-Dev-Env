@@ -92,18 +92,117 @@ function uniquePathsWithObstacles2(obstacleGrid: number[][]): number {
         if (top) total += top;
         if (left) total += left;
         dpArr[y][x] = total;
-        console.log("total at", y, x, "is", total);
+        // console.log("total at", y, x, "is", total);
       }
     }
   }
   return dpArr[dpArr.length - 1][dpArr[0].length - 1];
 }
 
-console.log(
-  uniquePathsWithObstacles2([
-    [0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1],
-    [0, 0, 0, 1, 0],
-    [0, 0, 0, 0, 0],
-  ]),
-);
+// console.log(
+//   uniquePathsWithObstacles2([
+//     [0, 0, 0, 0, 0],
+//     [0, 0, 0, 0, 1],
+//     [0, 0, 0, 1, 0],
+//     [0, 0, 0, 0, 0],
+//   ]),
+// );
+
+function findOrder(numCourses: number, prerequisites: number[][]): number[] {
+  /*
+  make {
+  0: [1,2],
+  1: [],
+  3: [2],
+  etc..
+  
+  }
+  
+  go through obj, and add node without any prereqs, then remove that prereq from list
+  */
+
+  const graph: { [key: string]: number[] } = {};
+  for (let i = 0; i < numCourses; i++) {
+    graph[i] = getPrerequisites(i);
+  }
+
+  const output: number[] = [];
+
+  let runAgain = true;
+  while (runAgain) {
+    let shouldRunAgain = false;
+    for (const key in graph) {
+      if (graph[key].length === 0) {
+        output.push(parseInt(key));
+        delete graph[key];
+        const runAgain = removePrereq(parseInt(key));
+        if (runAgain === true) shouldRunAgain = true;
+      }
+    }
+    runAgain = shouldRunAgain;
+  }
+
+  if (output.length === numCourses) return output;
+  return [];
+
+  function stillDeletable(): boolean {
+    const arr = Object.values(graph);
+    if (arr.some((i) => i.length === 0)) return true;
+    return false;
+  }
+
+  function getPrerequisites(idx: number): number[] {
+    const output: number[] = [];
+    for (const pair of prerequisites) {
+      if (pair[0] === idx && !output.includes(pair[1])) {
+        output.push(pair[1]);
+      }
+    }
+    return output;
+  }
+
+  function removePrereq(idx: number): boolean {
+    let runAgain = false;
+    for (const key in graph) {
+      graph[key] = graph[key].filter((i) => i !== idx);
+      if (graph[key].length === 0) runAgain = true;
+    }
+    return runAgain;
+  }
+}
+
+// console.log(findOrder(2, [[0, 1]]));
+
+function countSubstrings(s: string): number {
+  let count = 0;
+  for (let i = 0; i < s.length; i++) {
+    for (let j = s.length - 1; j >= i; j--) {
+      console.log("i", i, "j", j);
+      if (s[i] === s[j]) {
+        if (getIsPalindrome(i, j) === true) {
+          count++;
+        }
+      }
+    }
+  }
+  return count;
+
+  function getIsPalindrome(leftIdx: number, rightIdx: number): boolean {
+    console.log("left", leftIdx, "right", rightIdx);
+    let left = leftIdx;
+    let right = rightIdx;
+    if (left === right) return true;
+
+    while (left < right) {
+      console.log("left", left, "right", right);
+      if (s[left] !== s[right]) {
+        return false;
+      }
+      left++;
+      right--;
+    }
+    return true;
+  }
+}
+
+console.log(countSubstrings("fdsklf"));

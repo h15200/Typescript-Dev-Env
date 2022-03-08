@@ -1,5 +1,6 @@
 # Typescript-Dev-Env
 
+- `npm i`
 - init setup for typescript + debugger.
 - jest with typescript was hard to set up, so bailed
 

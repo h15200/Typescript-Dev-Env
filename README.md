@@ -5,11 +5,12 @@
 
 ## using for algos
 
-- in a new file, write the code
-- run `tsc src/${filename}` to make sure it compiles without type errors. fix if necessary
+- in src/main.ts, write the code
+- check problems tab for type errors
 - for simple tests, run a bunch of console logs
 - hit the debugger green play button to start
 - type in debugger console for variables during that frozen time
+- run `ts-node arc/main.ts` to run it
 
 ## how to setup debugger from scratch (1/15/22)
 
